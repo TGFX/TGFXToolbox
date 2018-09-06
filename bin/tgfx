@@ -1,0 +1,56 @@
+#!/usr/bin/python3
+
+import argparse
+import lib
+    
+parser = argparse.ArgumentParser()
+subparsers = parser.add_subparsers()
+parser.add_argument("-v", help="Vebose ouput", dest="verbose", action="store_true")
+
+parser_create = subparsers.add_parser("create", help="Create new project")
+parser_create.add_argument("name", help="New project name")
+parser_create.add_argument("domain", help="Project domain name")
+parser_create.add_argument("project_type", help="Project type")
+parser_create.set_defaults(func=lib.create)
+
+parser_create = subparsers.add_parser("commit", help="Commit changes to a project")
+parser_create.add_argument("message", help="Commit message")
+parser_create.set_defaults(func=lib.commit)
+
+parser_create = subparsers.add_parser("push", help="Push project to github")
+parser_create.set_defaults(func=lib.push)
+
+parser_create = subparsers.add_parser("publish", help="Push a project to the live servers")
+parser_create.set_defaults(func=lib.publish)
+
+parser_create = subparsers.add_parser("testpublish", help="Push a project to the testing servers")
+parser_create.set_defaults(func=lib.publish)
+
+parser_create = subparsers.add_parser("update", help="Change details about a project")
+parser_create.add_argument("-n", help="New project name")
+parser_create.add_argument("-d", help="Project domain name")
+parser_create.add_argument("-t", help="Project type")
+parser_create.set_defaults(func=lib.update)
+
+parser_create = subparsers.add_parser("delete", help="Remove a project")
+parser_create.add_argument("-p", help="Purge files")
+parser_create.set_defaults(func=lib.delete)
+
+parser_create = subparsers.add_parser("raise", help="Raise a new issue on Trello")
+parser_create.add_argument("name", help="New issue name")
+parser_create.add_argument("message", help="Issue body")
+parser_create.add_argument("-s", help="Severity")
+parser_create.set_defaults(func=lib.raise_issue)
+
+parser_create = subparsers.add_parser("resolve", help="Resolve Trello issue")
+parser_create.add_argument("id", help="ID of issue to resolve")
+parser_create.set_defaults(func=lib.resolve)
+
+parser_create = subparsers.add_parser("test", help="Run project tests")
+parser_create.set_defaults(func=lib.test)
+
+args = parser.parse_args()
+env = lib.Env(args, lib.create)
+
+args.func(args, env)
+    
