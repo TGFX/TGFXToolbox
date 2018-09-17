@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 
 class Env:
     
@@ -10,7 +11,13 @@ class Env:
         if self.project_file == "" and args.func != create:
             print("Project file not found, exiting")
             sys.exit(1)
-    
+            
+        with open(self.project_file) as file:
+            data = json.load(file)
+            
+        for value in data:
+            setattr(self, value, data[value])
+            
     def find_file(self, filename, directory):
         if directory == "/":
             return ""

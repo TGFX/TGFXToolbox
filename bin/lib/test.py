@@ -1,2 +1,2 @@
 def test (args, env):
-    print("Test")
+    print(env.__dict__)
